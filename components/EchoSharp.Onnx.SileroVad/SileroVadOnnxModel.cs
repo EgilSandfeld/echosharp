@@ -1,6 +1,7 @@
 // Licensed under the MIT license: https://opensource.org/licenses/MIT
 
 using Microsoft.ML.OnnxRuntime;
+using Microsoft.ML.OnnxRuntime.Tensors;
 
 namespace EchoSharp.Onnx.SileroVad;
 internal class SileroVadOnnxModel : IDisposable
@@ -44,7 +45,10 @@ internal class SileroVadOnnxModel : IDisposable
         var state = new SileroInferenceState(session.CreateIoBinding());
 
         state.Binding.BindInput("state", OrtValue.CreateTensorValueFromMemory(state.State, stateShape));
-        state.Binding.BindInput("sr", OrtValue.CreateTensorValueFromMemory(sampleRateInput, [1]));
+        // Fix: Explicitly create Int64 tensor for sample rate input
+        // The Silero VAD ONNX model expects tensor(int64) for the 'sr' input
+        // Using generic method to ensure proper type inference
+        state.Binding.BindInput("sr", OrtValue.CreateTensorValueFromMemory<long>(sampleRateInput, [1]));
 
         state.Binding.BindOutput("output", OrtValue.CreateTensorValueFromMemory(state.Output, [1, SileroConstants.OutputSize]));
         state.Binding.BindOutput("stateN", OrtValue.CreateTensorValueFromMemory(state.PendingState, stateShape));
