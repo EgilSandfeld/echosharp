@@ -6,7 +6,6 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" />
     <PackageReference Include="System.Memory" />
     <PackageReference Include="System.IO.Compression" />
   </ItemGroup>
@@ -14,6 +13,10 @@
   <ItemGroup>
     <InternalsVisibleTo Include="EchoSharp.Tests" />
     <InternalsVisibleTo Include="EchoSharp.AzureAI.SpeechServices" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" />
   </ItemGroup>
 
 </Project>
